@@ -1,0 +1,81 @@
+﻿@page
+@using IdentityApp.Authorization
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>This is Our Invoice Management System</p>
+</div>
+
+
+@if(User.IsInRole(Constants.InvoiceAdminRole))
+{
+    <div>
+        <canvas id="myChart"></canvas>
+    </div> 
+}
+
+@section Scripts {
+
+    <script>
+        const labels = [
+        'jan',
+        'feb',
+        'mar',
+        'Apr',
+        'may',
+        'jun',
+        'jul',
+        'Aug',
+        'sep',
+        'oct',
+        'nov',
+        'dec'
+        ];
+
+        const data = {
+            labels : labels,
+            datasets: [
+                {
+                    label: "Revenue Submitted",
+                    backgroundColor: "rgb(0,0,0)",
+                    bordercolor: "rgb(0,0,0)",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueSubmitted)
+                },
+                {
+                    label: "Revenue Approved",
+                    backgroundColor: "rgb(99,255,132)",
+                    bordercolor: "rgb(99,255,132)",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueApproved)
+                },
+                {
+                    label: "Revenue Rejected",
+                    backgroundColor: "rgb(255,99,132)",
+                    bordercolor: "rgb(255,99,132)",
+                    cubicInterpolationMode: "monotone",
+                    data: @Json.Serialize(Model.revenueRejected)
+                        }
+            ]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {}
+        };
+
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+
+    </script>
+}
